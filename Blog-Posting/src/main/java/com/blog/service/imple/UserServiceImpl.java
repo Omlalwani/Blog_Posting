@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService,UserDetailsService{
 			return org.springframework.security.core.userdetails.User.builder()
 					.username(user.getUsername())
 					.password(user.getPassword())
-					.roles(null)
+					.roles(user.getRole().toString())
 					.build();
 		}
 		throw new UsernameNotFoundException("User not found!...." + email);

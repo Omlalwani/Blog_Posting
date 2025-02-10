@@ -49,8 +49,9 @@ public class UserController
 		
 		if(isUser != null)
 		{
-			String token = jwtService.generateToken(user.getUsername());
-			return "Login Successfull : " + token;
+			System.out.println("Email: " + email);
+			String token = jwtService.generateToken(email);
+			return "Login Successfull : " + " Email : " + email + " : "+ token;
 			
 		}else
 		{

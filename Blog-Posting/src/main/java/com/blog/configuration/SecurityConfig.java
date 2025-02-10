@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,8 +16,10 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.blog.filter.JwtAuthenticationFilter;
+import com.blog.service.MyUserDeatilsService;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 	
 	@Autowired
@@ -27,18 +30,18 @@ public class SecurityConfig {
 		return new BCryptPasswordEncoder(); 
 	}
 
+	/*
+	 * @Bean public UserDetailsService userDetailsService(PasswordEncoder
+	 * passwordEncoder) { UserDetails user = User.withUsername("user")
+	 * .password(passwordEncoder.encode("user")) .build();
+	 * 
+	 * return new InMemoryUserDetailsManager(user); }
+	 */
 	
 	@Bean
-	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder)
-	{
-		UserDetails user = User.withUsername("user")
-				.password(passwordEncoder.encode("user"))
-				.build();
-		
-		return new InMemoryUserDetailsManager(user);
+	UserDetailsService userDetailsService() { // No PasswordEncoder needed here
+	    return new MyUserDeatilsService();
 	}
-	
-	
 	
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception 
@@ -47,8 +50,8 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable()) // Updated csrf disabling
         .authorizeRequests(authorizeRequests ->
             authorizeRequests
-                .requestMatchers("/user/register", "/user/loginUser", "/blogs/**").permitAll()
-                
+                .requestMatchers("/user/register", "/user/loginUser").permitAll()
+                .requestMatchers("/blogs/**").authenticated()
                 .anyRequest().authenticated()
         )
         

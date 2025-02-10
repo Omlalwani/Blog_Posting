@@ -1,24 +1,48 @@
 package com.blog.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 public class User 
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private int userId;
 	private String username, email, password;
-	public int getId() {
-		return id;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private  List<Blog> blogs = new ArrayList<>();
+	
+	private String role;
+	
+	public String getRole() {
+		return role;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public List<Blog> getBlogs() {
+		return blogs;
+	}
+	public void setBlogs(List<Blog> blogs) {
+		this.blogs = blogs;
+	}
+	public int getId() {
+		return userId;
+	}
+	public void setId(int userId) {
+		this.userId = userId;
 	}
 	public String getUsername() {
 		return username;
@@ -38,9 +62,9 @@ public class User
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public User(int id, String username, String email, String password) {
+	public User(int userId, String username, String email, String password) {
 		super();
-		this.id = id;
+		this.userId = userId;
 		this.username = username;
 		this.email = email;
 		this.password = password;
